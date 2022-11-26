@@ -116,4 +116,4 @@ class Queue {
     }
 }
 
-exports.Queue = Queue;
+module.exports = { Queue };
