@@ -1,16 +1,8 @@
 const { BinarySearchTreeNode } = require('./binarySearchTreeNode');
 
-const defaultCompare = (a, b) => {
-    if (a === b) return 0;
-    return a > b ? 1 : -1;
-};
-
-/**
- * @class BinarySearchTree
- */
 class BinarySearchTree {
-    constructor(compare) {
-        this._compare = compare || defaultCompare;
+    constructor(customComparator) {
+        this._comparator = customComparator || comparator;
         this._root = null;
         this._count = 0;
     }
@@ -36,70 +28,55 @@ class BinarySearchTree {
         return this._root;
     }
 
-    /**
-     * Inserts a node with a key/value into the tree
-     * @public
-     * @param {number|string|object} value
-     * @return {BinarySearchTree}
-     */
-    insert(value) {
-        const newNode = new BinarySearchTreeNode(value);
-        const insertRecursive = (node) => {
-            const compare = this._compare(newNode.getValue(), node.getValue());
-            if (compare < 0) {
+    insertKey(key) {
+        const temp = new BinarySearchTreeNode(key);
+        const insert = (node) => {
+            const difference = this._comparator(
+                temp.getValue(),
+                node.getValue()
+            );
+            if (difference < 0) {
                 if (node.hasLeft()) {
-                    insertRecursive(node.getLeft());
+                    insert(node.getLeft());
                 } else {
-                    node.setLeft(newNode.setParent(node));
+                    node.setLeft(temp.setParent(node));
                     this._count += 1;
                 }
-            } else if (compare > 0) {
+            } else if (difference > 0) {
                 if (node.hasRight()) {
-                    insertRecursive(node.getRight());
+                    insert(node.getRight());
                 } else {
-                    node.setRight(newNode.setParent(node));
+                    node.setRight(temp.setParent(node));
                     this._count += 1;
                 }
             } else {
-                node.setValue(value);
+                node.setValue(key);
             }
         };
 
         if (this._root === null) {
-            this._root = newNode;
+            this._root = temp;
             this._count += 1;
         } else {
-            insertRecursive(this._root);
+            insert(this._root);
         }
 
         return this;
     }
 
-    /**
-     * Checks if a value exists in the tree by its key
-     * @public
-     * @param {number|string} key
-     * @return {boolean}
-     */
-    has(value) {
-        const hasRecursive = (current) => {
+    containsKey(value) {
+        const contains = (current) => {
             if (current === null) return false;
 
-            const compare = this._compare(value, current.getValue());
-            if (compare === 0) return true;
-            if (compare < 0) return hasRecursive(current.getLeft());
-            return hasRecursive(current.getRight());
+            const difference = this._comparator(value, current.getValue());
+            if (difference === 0) return true;
+            if (difference < 0) return contains(current.getLeft());
+            return contains(current.getRight());
         };
 
-        return hasRecursive(this._root);
+        return contains(this._root);
     }
 
-    /**
-     * Finds a node by its key
-     * @public
-     * @param {BinarySearchTreeNode} [node]
-     * @return {number}
-     */
     treeHeight(node = this._root) {
         if (node === null) return 0;
         let lh = 0;
@@ -109,206 +86,139 @@ class BinarySearchTree {
         if (node.hasRight()) rh = this.treeHeight(node.getRight());
         return 1 + Math.max(lh, rh);
     }
-    /**
-     * Finds the node with max key (most right) in the tree
-     * @public
-     * @param {BinarySearchTreeNode} [current]
-     * @return {BinarySearchTreeNode}
-     */
+
     max(node = this._root) {
         if (node === null) return null;
         if (node.hasRight()) return this.max(node.getRight());
         return node;
     }
 
-    /**
-     * Finds a node by its key
-     * @public
-     * @param {number|string} key
-     * @return {BinarySearchTreeNode}
-     */
-    find(value) {
-        const findRecursive = (node) => {
+    findKey(value) {
+        const get = (node) => {
             if (node === null) return null;
 
-            const compare = this._compare(value, node.getValue());
-            if (compare === 0) return node;
-            if (compare < 0) return findRecursive(node.getLeft());
-            return findRecursive(node.getRight());
+            const difference = this._comparator(value, node.getValue());
+            if (difference === 0) return node;
+            if (difference < 0) return get(node.getLeft());
+            return get(node.getRight());
         };
 
-        return findRecursive(this._root);
+        return get(this._root);
     }
 
-    /**
-     * Finds the node with min key (most left) in the tree
-     * @public
-     * @param {BinarySearchTreeNode} [current]
-     * @return {BinarySearchTreeNode}
-     */
     min(node = this._root) {
         if (node === null) return null;
         if (node.hasLeft()) return this.min(node.getLeft());
         return node;
     }
 
-    /**
-     * Returns the root node
-     * @public
-     * @return {BinarySearchTreeNode}
-     */
+    sum(node = this._root) {
+        if (node === null) return 0;
+        return (
+            node.getValue() +
+            this.sum(node.getLeft()) +
+            this.sum(node.getRight())
+        );
+    }
+
     root() {
         return this._root;
     }
 
-    /**
-     * Returns the nodes count
-     * @public
-     * @return {number}
-     */
-    count() {
-        return this._count;
-    }
+    removeKey(value) {
+        const removeNode = (val, temp) => {
+            if (temp === null) return false;
 
-    /**
-     * Removes a node by its key
-     * @public
-     * @param {number|string|object} value
-     * @return {boolean}
-     */
-    remove(value) {
-        const removeRecursively = (val, node) => {
-            if (node === null) return false;
+            const difference = this._comparator(val, temp.getValue());
+            if (difference < 0) return removeNode(val, temp.getLeft());
+            if (difference > 0) return removeNode(val, temp.getRight());
 
-            const compare = this._compare(val, node.getValue());
-            if (compare < 0) return removeRecursively(val, node.getLeft());
-            if (compare > 0) return removeRecursively(val, node.getRight());
-
-            // node node is the node to remove
-            // case 1: node has no children
-            if (node.isLeaf()) {
-                if (node.isRoot()) {
+            if (temp.isLeaf()) {
+                if (temp.isRoot()) {
                     this._root = null;
                 } else if (
-                    this._compare(val, node.getParent().getValue()) < 0
+                    this._comparator(val, temp.getParent().getValue()) < 0
                 ) {
-                    node.getParent().setLeft(null);
+                    temp.getParent().setLeft(null);
                 } else {
-                    node.getParent().setRight(null);
+                    temp.getParent().setRight(null);
                 }
                 this._count -= 1;
                 return true;
             }
 
-            // case 2: node has a left child and no right child
-            if (!node.hasRight()) {
-                if (node.isRoot()) {
-                    this._root = node.getLeft();
+            if (!temp.hasRight()) {
+                if (temp.isRoot()) {
+                    this._root = temp.getLeft();
                 } else if (
-                    this._compare(val, node.getParent().getValue()) < 0
+                    this._comparator(val, temp.getParent().getValue()) < 0
                 ) {
-                    node.getParent().setLeft(node.getLeft());
+                    temp.getParent().setLeft(temp.getLeft());
                 } else {
-                    node.getParent().setRight(node.getLeft());
+                    temp.getParent().setRight(temp.getLeft());
                 }
-                node.getLeft().setParent(node.getParent());
+                temp.getLeft().setParent(temp.getParent());
                 this._count -= 1;
                 return true;
             }
 
-            // case 3: node has a right child and no left child
-            if (!node.hasLeft()) {
-                if (node.isRoot()) {
-                    this._root = node.getRight();
+            if (!temp.hasLeft()) {
+                if (temp.isRoot()) {
+                    this._root = temp.getRight();
                 } else if (
-                    this._compare(val, node.getParent().getValue()) < 0
+                    this._comparator(val, temp.getParent().getValue()) < 0
                 ) {
-                    node.getParent().setLeft(node.getRight());
+                    temp.getParent().setLeft(temp.getRight());
                 } else {
-                    node.getParent().setRight(node.getRight());
+                    temp.getParent().setRight(temp.getRight());
                 }
-                node.getRight().setParent(node.getParent());
+                temp.getRight().setParent(temp.getParent());
                 this._count -= 1;
                 return true;
             }
 
-            // case 4: node has left and right children
-            const minRight = this.min(node.getRight());
-            node.setValue(minRight.getValue());
-            return removeRecursively(minRight.getValue(), minRight);
+            const minRight = this.min(temp.getRight());
+            temp.setValue(minRight.getValue());
+            return removeNode(minRight.getValue(), minRight);
         };
 
-        return removeRecursively(value, this._root);
+        return removeNode(value, this._root);
     }
 
-    /**
-     * Traverses the tree in-order (left-node-right)
-     * @public
-     * @param {function} cb
-     */
-    traverseInOrder(cb) {
-        if (typeof cb !== 'function') {
-            throw new Error('.traverseInOrder expects a callback function');
-        }
-
-        const traverseRecursive = (node) => {
-            if (node === null) return;
-            traverseRecursive(node.getLeft());
-            cb(node);
-            traverseRecursive(node.getRight());
+    inOrder(cb) {
+        const recurse = (temp) => {
+            if (temp === null) return;
+            recurse(temp.getLeft());
+            cb(temp);
+            recurse(temp.getRight());
         };
-
-        traverseRecursive(this._root);
+        recurse(this._root);
     }
 
-    /**
-     * Traverses the tree pre-order (node-left-right)
-     * @public
-     * @param {function} cb
-     */
-    traversePreOrder(cb) {
-        if (typeof cb !== 'function') {
-            throw new Error('.traversePreOrder expects a callback function');
-        }
-
-        const traverseRecursive = (node) => {
-            if (node === null) return;
-            cb(node);
-            traverseRecursive(node.getLeft());
-            traverseRecursive(node.getRight());
+    preOrder(cb) {
+        const recurse = (temp) => {
+            if (temp === null) return;
+            cb(temp);
+            recurse(temp.getLeft());
+            recurse(temp.getRight());
         };
-
-        traverseRecursive(this._root);
+        recurse(this._root);
     }
 
-    /**
-     * Traverses the tree post-order (left-right-node)
-     * @public
-     * @param {function} cb
-     */
-    traversePostOrder(cb) {
-        if (typeof cb !== 'function') {
-            throw new Error('.traversePostOrder expects a callback function');
-        }
-
-        const traverseRecursive = (node) => {
-            if (node === null) return;
-            traverseRecursive(node.getLeft());
-            traverseRecursive(node.getRight());
-            cb(node);
+    postOrder(cb) {
+        const recurse = (temp) => {
+            if (temp === null) return;
+            recurse(temp.getLeft());
+            recurse(temp.getRight());
+            cb(temp);
         };
-
-        traverseRecursive(this._root);
-    }
-
-    /**
-     * Clears the tree
-     * @public
-     */
-    clear() {
-        this._root = null;
-        this._count = 0;
+        recurse(this._root);
     }
 }
+
+const comparator = (a, b) => {
+    if (a === b) return 0;
+    return a > b ? 1 : -1;
+};
 
 exports.BinarySearchTree = BinarySearchTree;

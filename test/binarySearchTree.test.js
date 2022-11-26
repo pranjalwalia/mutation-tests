@@ -44,19 +44,19 @@ describe('BinarySearchTree tests', () => {
         });
     });
 
-    describe('.insert(value)', () => {
+    describe('.insertKey(value)', () => {
         it('should insert nodes to the tree', () => {
-            expect(bst.insert(50)).to.be.instanceof(BinarySearchTree);
-            expect(bst.insert(80)).to.be.instanceof(BinarySearchTree);
-            expect(bst.insert(30)).to.be.instanceof(BinarySearchTree);
-            expect(bst.insert(90)).to.be.instanceof(BinarySearchTree);
-            expect(bst.insert(60)).to.be.instanceof(BinarySearchTree);
-            expect(bst.insert(40)).to.be.instanceof(BinarySearchTree);
-            expect(bst.insert(20)).to.be.instanceof(BinarySearchTree);
+            expect(bst.insertKey(50)).to.be.instanceof(BinarySearchTree);
+            expect(bst.insertKey(80)).to.be.instanceof(BinarySearchTree);
+            expect(bst.insertKey(30)).to.be.instanceof(BinarySearchTree);
+            expect(bst.insertKey(90)).to.be.instanceof(BinarySearchTree);
+            expect(bst.insertKey(60)).to.be.instanceof(BinarySearchTree);
+            expect(bst.insertKey(40)).to.be.instanceof(BinarySearchTree);
+            expect(bst.insertKey(20)).to.be.instanceof(BinarySearchTree);
 
             // updates value of existing node
-            expect(bst.insert(20)).to.be.instanceof(BinarySearchTree);
-            expect(bst.find(20).getValue()).to.equal(20);
+            expect(bst.insertKey(20)).to.be.instanceof(BinarySearchTree);
+            expect(bst.findKey(20).getValue()).to.equal(20);
         });
     });
 
@@ -68,22 +68,16 @@ describe('BinarySearchTree tests', () => {
         });
     });
 
-    describe('.count()', () => {
-        it('get the count of nodes in the tree', () => {
-            expect(bst.count()).to.be.equal(7);
-        });
-    });
-
-    describe('.has(value)', () => {
+    describe('.containsKey(value)', () => {
         it('checks if a node exists by key', () => {
-            expect(bst.has(50)).to.equal(true);
-            expect(bst.has(80)).to.equal(true);
-            expect(bst.has(30)).to.equal(true);
-            expect(bst.has(90)).to.equal(true);
-            expect(bst.has(50)).to.equal(true);
-            expect(bst.has(40)).to.equal(true);
-            expect(bst.has(20)).to.equal(true);
-            expect(bst.has(100)).to.equal(false);
+            expect(bst.containsKey(50)).to.equal(true);
+            expect(bst.containsKey(80)).to.equal(true);
+            expect(bst.containsKey(30)).to.equal(true);
+            expect(bst.containsKey(90)).to.equal(true);
+            expect(bst.containsKey(50)).to.equal(true);
+            expect(bst.containsKey(40)).to.equal(true);
+            expect(bst.containsKey(20)).to.equal(true);
+            expect(bst.containsKey(100)).to.equal(false);
         });
     });
 
@@ -93,16 +87,24 @@ describe('BinarySearchTree tests', () => {
         });
     });
 
-    describe('.find(value)', () => {
+    describe('.sum()', () => {
+        it('should sum the nodes in BST correctly', () => {
+            console.log(preOrderBST.sum());
+            expect(bst.sum()).to.be.equal(370);
+            expect(preOrderBST.sum()).to.be.equal(113);
+        });
+    });
+
+    describe('.findKey(value)', () => {
         it('should search a node by its key in the tree', () => {
-            expect(bst.find(50)).to.be.instanceof(BinarySearchTreeNode);
-            expect(bst.find(80)).to.be.instanceof(BinarySearchTreeNode);
-            expect(bst.find(30)).to.be.instanceof(BinarySearchTreeNode);
-            expect(bst.find(90)).to.be.instanceof(BinarySearchTreeNode);
-            expect(bst.find(50)).to.be.instanceof(BinarySearchTreeNode);
-            expect(bst.find(40)).to.be.instanceof(BinarySearchTreeNode);
-            expect(bst.find(20)).to.be.instanceof(BinarySearchTreeNode);
-            expect(bst.find(100)).to.equal(null);
+            expect(bst.findKey(50)).to.be.instanceof(BinarySearchTreeNode);
+            expect(bst.findKey(80)).to.be.instanceof(BinarySearchTreeNode);
+            expect(bst.findKey(30)).to.be.instanceof(BinarySearchTreeNode);
+            expect(bst.findKey(90)).to.be.instanceof(BinarySearchTreeNode);
+            expect(bst.findKey(50)).to.be.instanceof(BinarySearchTreeNode);
+            expect(bst.findKey(40)).to.be.instanceof(BinarySearchTreeNode);
+            expect(bst.findKey(20)).to.be.instanceof(BinarySearchTreeNode);
+            expect(bst.findKey(100)).to.equal(null);
         });
     });
 
@@ -120,91 +122,80 @@ describe('BinarySearchTree tests', () => {
         });
     });
 
-    describe('.traverseInOrder(cb)', () => {
+    describe('.inOrder(cb)', () => {
         it('traverse the tree in-order', () => {
             const keys = [];
-            bst.traverseInOrder((node) => keys.push(node.getValue()));
+            bst.inOrder((node) => keys.push(node.getValue()));
             expect(keys).to.deep.equal([20, 30, 40, 50, 60, 80, 90]);
         });
     });
 
-    describe('.traversePreOrder(cb)', () => {
+    describe('.preOrder(cb)', () => {
         it('traverse the tree pre-order', () => {
             const keys = [];
-            bst.traversePreOrder((node) => keys.push(node.getValue()));
+            bst.preOrder((node) => keys.push(node.getValue()));
             expect(keys).to.deep.equal([50, 30, 20, 40, 80, 60, 90]);
         });
     });
 
-    describe('.traversePostOrder(cb)', () => {
+    describe('.postOrder(cb)', () => {
         it('traverse the tree post-order', () => {
             const keys = [];
-            bst.traversePostOrder((node) => keys.push(node.getValue()));
+            bst.postOrder((node) => keys.push(node.getValue()));
             expect(keys).to.deep.equal([20, 40, 30, 60, 90, 80, 50]);
         });
     });
 
-    describe('.remove(value)', () => {
-        it('should remove a leaf node', () => {
-            bst.remove(20);
-            expect(bst.has(20)).to.equal(false);
-            expect(bst.find(30).getLeft()).to.equal(null);
-            expect(bst.count()).to.equal(6);
+    describe('.removeKey(value)', () => {
+        it('should removeKey a leaf node', () => {
+            bst.removeKey(20);
+            expect(bst.containsKey(20)).to.equal(false);
+            expect(bst.findKey(30).getLeft()).to.equal(null);
         });
 
-        it('should remove a node with a right child only', () => {
-            bst.remove(30);
-            expect(bst.has(30)).to.equal(false);
+        it('should removeKey a node with a right child only', () => {
+            bst.removeKey(30);
+            expect(bst.containsKey(30)).to.equal(false);
             expect(bst.root().getLeft().getValue()).to.equal(40);
-            expect(bst.count()).to.equal(5);
         });
 
-        it('should remove a node with a left child only', () => {
-            bst.insert(30);
-            bst.remove(40);
-            expect(bst.has(40)).to.equal(false);
+        it('should removeKey a node with a left child only', () => {
+            bst.insertKey(30);
+            bst.removeKey(40);
+            expect(bst.containsKey(40)).to.equal(false);
             expect(bst.root().getLeft().getValue()).to.equal(30);
-            expect(bst.count()).to.equal(5);
         });
 
-        it('should remove a node with two children', () => {
-            bst.remove(80);
-            expect(bst.has(80)).to.equal(false);
+        it('should removeKey a node with two children', () => {
+            bst.removeKey(80);
+            expect(bst.containsKey(80)).to.equal(false);
             expect(bst.root().getRight().getValue()).to.equal(90);
-            expect(bst.find(90).getRight()).to.equal(null);
-            expect(bst.find(90).getLeft().getValue()).to.equal(60);
-            expect(bst.count()).to.equal(4);
+            expect(bst.findKey(90).getRight()).to.equal(null);
+            expect(bst.findKey(90).getLeft().getValue()).to.equal(60);
         });
 
-        it('should remove root node with right child', () => {
-            bst.insert(100);
-            bst.remove(60);
-            bst.remove(90);
-            bst.remove(30);
-            bst.remove(50);
+        it('should removeKey root node with right child', () => {
+            bst.insertKey(100);
+            bst.removeKey(60);
+            bst.removeKey(90);
+            bst.removeKey(30);
+            bst.removeKey(50);
             expect(bst.root().getValue()).to.equal(100);
         });
 
-        it('should remove root node with left child', () => {
-            bst.insert(20);
-            bst.insert(30);
-            bst.insert(25);
-            bst.remove(30);
-            bst.remove(25);
-            bst.remove(100);
+        it('should removeKey root node with left child', () => {
+            bst.insertKey(20);
+            bst.insertKey(30);
+            bst.insertKey(25);
+            bst.removeKey(30);
+            bst.removeKey(25);
+            bst.removeKey(100);
             expect(bst.root().getValue()).to.equal(20);
         });
 
-        it('should remove root node', () => {
-            bst.remove(20);
+        it('should removeKey root node', () => {
+            bst.removeKey(20);
             expect(bst.root()).to.equal(null);
         });
-    });
-
-    describe('.clear()', () => {
-        bst.clear();
-        expect(bst.count()).to.equal(0);
-        expect(bst.root()).to.equal(null);
-        expect(bst.remove(10)).to.equal(false);
     });
 });
