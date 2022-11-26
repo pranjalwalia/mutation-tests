@@ -47,7 +47,7 @@ describe('BinarySearchTree tests', () => {
     });
 
     describe('.insertKey(value)', () => {
-        it('should insert nodes to the tree', () => {
+        it('insert nodes', () => {
             expect(bst.insertKey(5)).to.be.instanceof(BinarySearchTree);
             expect(bst.insertKey(8)).to.be.instanceof(BinarySearchTree);
             expect(bst.insertKey(3)).to.be.instanceof(BinarySearchTree);
@@ -63,7 +63,7 @@ describe('BinarySearchTree tests', () => {
     });
 
     describe('.root()', () => {
-        it('should get the root node', () => {
+        it('get the root', () => {
             expect(bst.root().getValue()).to.equal(5);
             expect(bst.root().getRight().getValue()).to.equal(8);
             expect(bst.root().getLeft().getValue()).to.equal(3);
@@ -71,7 +71,7 @@ describe('BinarySearchTree tests', () => {
     });
 
     describe('.containsKey(value)', () => {
-        it('checks if a node exists by key', () => {
+        it('whether node exists by key', () => {
             expect(bst.containsKey(5)).to.equal(true);
             expect(bst.containsKey(8)).to.equal(true);
             expect(bst.containsKey(3)).to.equal(true);
@@ -97,7 +97,7 @@ describe('BinarySearchTree tests', () => {
     });
 
     describe('.findKey(value)', () => {
-        it('should search a node by its key in the tree', () => {
+        it('search node by its key in the tree', () => {
             expect(bst.findKey(5)).to.be.instanceof(BinarySearchTreeNode);
             expect(bst.findKey(8)).to.be.instanceof(BinarySearchTreeNode);
             expect(bst.findKey(3)).to.be.instanceof(BinarySearchTreeNode);
@@ -116,13 +116,6 @@ describe('BinarySearchTree tests', () => {
         });
     });
 
-    describe('.min()', () => {
-        it('get the node with min key', () => {
-            const min = bst.min();
-            expect(min.getValue()).to.equal(2);
-        });
-    });
-
     describe('.inOrder(cb)', () => {
         it('traverse the tree in-order', () => {
             const keys = [];
@@ -131,11 +124,10 @@ describe('BinarySearchTree tests', () => {
         });
     });
 
-    describe('.preOrder(cb)', () => {
-        it('traverse the tree pre-order', () => {
-            const keys = [];
-            bst.preOrder((node) => keys.push(node.getValue()));
-            expect(keys).to.deep.equal([5, 3, 2, 4, 8, 6, 9]);
+    describe('.min()', () => {
+        it('get the node with min key', () => {
+            const min = bst.min();
+            expect(min.getValue()).to.equal(2);
         });
     });
 
@@ -144,6 +136,14 @@ describe('BinarySearchTree tests', () => {
             const keys = [];
             bst.postOrder((node) => keys.push(node.getValue()));
             expect(keys).to.deep.equal([2, 4, 3, 6, 9, 8, 5]);
+        });
+    });
+
+    describe('.preOrder(cb)', () => {
+        it('traverse the tree pre-order', () => {
+            const keys = [];
+            bst.preOrder((node) => keys.push(node.getValue()));
+            expect(keys).to.deep.equal([5, 3, 2, 4, 8, 6, 9]);
         });
     });
 
