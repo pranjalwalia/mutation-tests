@@ -1,4 +1,79 @@
-const { BinarySearchTreeNode } = require('./binarySearchTreeNode');
+class BinarySearchTreeNode {
+    constructor(value) {
+        this._value = value;
+        this._left = null;
+        this._right = null;
+        this._parent = null;
+    }
+
+    setValue(value) {
+        this._value = value;
+        return this;
+    }
+
+    getValue() {
+        return this._value;
+    }
+
+    setLeft(left) {
+        if (left && !(left instanceof BinarySearchTreeNode)) {
+            throw new Error('setLeft expects a BinarySearchTreeNode');
+        }
+
+        this._left = left || null;
+        return this;
+    }
+
+    getLeft() {
+        return this._left;
+    }
+
+    hasLeft() {
+        return this._left instanceof BinarySearchTreeNode;
+    }
+
+    setRight(right) {
+        if (right && !(right instanceof BinarySearchTreeNode)) {
+            throw new Error('setRight expects a BinarySearchTreeNode or null');
+        }
+
+        this._right = right || null;
+        return this;
+    }
+
+    getRight() {
+        return this._right;
+    }
+
+    hasRight() {
+        return this._right instanceof BinarySearchTreeNode;
+    }
+
+    setParent(parent) {
+        if (parent && !(parent instanceof BinarySearchTreeNode)) {
+            throw new Error('setParent expects a BinarySearchTreeNode or null');
+        }
+
+        this._parent = parent || null;
+        return this;
+    }
+
+    getParent() {
+        return this._parent;
+    }
+
+    hasParent() {
+        return this._parent instanceof BinarySearchTreeNode;
+    }
+
+    isRoot() {
+        return this._parent === null;
+    }
+
+    isLeaf() {
+        return !this.hasLeft() && !this.hasRight();
+    }
+}
 
 class BinarySearchTree {
     constructor(customComparator) {
@@ -221,4 +296,4 @@ const comparator = (a, b) => {
     return a > b ? 1 : -1;
 };
 
-exports.BinarySearchTree = BinarySearchTree;
+module.exports = { BinarySearchTree, BinarySearchTreeNode };
