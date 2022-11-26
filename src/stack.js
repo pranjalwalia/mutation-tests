@@ -1,108 +1,137 @@
-/**
- * @license MIT
- * @copyright 2020 Eyas Ranjous <eyas.ranjous@gmail.com>
- *
- * @class
- */
 class Stack {
-  /**
-   * Creates a stack.
-   * @param {array} [elements]
-   */
-  constructor(elements) {
-    this._elements = Array.isArray(elements) ? elements : [];
-  }
-
-  /**
-   * Checks if the stack is empty.
-   * @public
-   * @returns {boolean}
-   */
-  isEmpty() {
-    return this._elements.length === 0;
-  }
-
-  /**
-   * Returns the number of elements in the stack.
-   * @public
-   * @returns {number}
-   */
-  size() {
-    return this._elements.length;
-  }
-
-  /**
-   * Returns the top element in the stack.
-   * @public
-   * @returns {number|string|object}
-   */
-  peek() {
-    if (this.isEmpty()) {
-      return null;
+    constructor(input) {
+        this._stackElements = [];
+        if (input instanceof Array) {
+            this._stackElements = input;
+        }
     }
 
-    return this._elements[this._elements.length - 1];
-  }
-
-  /**
-   * Adds an element to the top of the stack.
-   * @public
-   * @param {number|string|object} element
-   */
-  push(element) {
-    this._elements.push(element);
-    return this;
-  }
-
-  /**
-   * Removes and returns the top element in the stack.
-   * @public
-   * @returns {number|string|object}
-   */
-  pop() {
-    if (this.isEmpty()) {
-      return null;
+    printNGE(arr = this._stackElements, n = this._stackElements.length) {
+        let s = [];
+        const res = {};
+        s.push(arr[0]);
+        for (var i = 1; i < n; i++) {
+            if (s.length == 0) {
+                s.push(arr[i]);
+                continue;
+            }
+            while ((s.length == 0) == false && s[s.length - 1] < arr[i]) {
+                res[`${s[s.length - 1]}`] = arr[i];
+                s.pop();
+            }
+            s.push(arr[i]);
+        }
+        while (s.length != 0) {
+            res[`${s[s.length - 1]}`] = -1;
+            s.pop();
+        }
+        return res;
     }
 
-    return this._elements.pop();
-  }
+    peek() {
+        return this.isEmpty()
+            ? null
+            : this._stackElements[this._stackElements.length - 1];
+    }
 
-  /**
-   * Returns the remaining elements as an array.
-   * @public
-   * @returns {array}
-   */
-  toArray() {
-    return this._elements.slice();
-  }
+    push(value) {
+        this._stackElements.push(value);
+        return this;
+    }
 
-  /**
-   * Clears all elements from the stack.
-   * @public
-   */
-  clear() {
-    this._elements = [];
-  }
+    computeHistogram(histogram = this._stackElements) {
+        let stack = [];
+        let max_area = 0;
+        let index = 0;
+        while (index < histogram.length) {
+            if (
+                stack.length == 0 ||
+                histogram[stack[stack.length - 1]] <= histogram[index]
+            ) {
+                stack.push(index);
+                index += 1;
+            } else {
+                let top_of_stack = stack.pop();
+                let area =
+                    histogram[top_of_stack] *
+                    (stack.length > 0
+                        ? index - stack[stack.length - 1] - 1
+                        : index);
+                max_area = Math.max(max_area, area);
+            }
+        }
+        while (stack.length > 0) {
+            let top_of_stack = stack.pop();
+            let area =
+                histogram[top_of_stack] *
+                (stack.length > 0
+                    ? index - stack[stack.length - 1] - 1
+                    : index);
+            max_area = Math.max(max_area, area);
+        }
+        return max_area;
+    }
 
-  /**
-   * Creates a shallow copy from the stack.
-   * @public
-   * @return {Stack}
-   */
-  clone() {
-    return new Stack(this._elements.slice());
-  }
+    pop() {
+        return this.isEmpty() ? null : this._stackElements.pop();
+    }
 
-  /**
-   * Creates a stack from an existing array
-   * @public
-   * @static
-   * @param {array} [elements]
-   * @return {Stack}
-   */
-  static fromArray(elements) {
-    return new Stack(elements);
-  }
+    slidingMaxOfKSubarrays(k) {
+        const a = this._stackElements;
+        const n = this._stackElements.length;
+        let res = [];
+        let max_upto = new Array(n);
+        let s = [];
+        s.push(0);
+        for (let i = 1; i < n; i++) {
+            while (s.length != 0 && a[s[s.length - 1]] < a[i]) {
+                max_upto[s[s.length - 1]] = i - 1;
+                s.pop();
+            }
+            s.push(i);
+        }
+        while (s.length != 0) {
+            max_upto[s[s.length - 1]] = n - 1;
+            s.pop();
+        }
+        let j = 0;
+        for (let i = 0; i <= n - k; i++) {
+            while (j < i || max_upto[j] < i + k - 1) {
+                j++;
+            }
+            res.push(a[j]);
+        }
+        return res;
+    }
+
+    static fromArray(elements) {
+        return new Stack(elements);
+    }
+
+    toArray() {
+        return this._stackElements.slice();
+    }
+
+    sortStack(input = this._stackElements) {
+        let tmpStack = [];
+        while (input.length > 0) {
+            let tmp = input.pop();
+            while (tmpStack.length > 0 && tmpStack[tmpStack.length - 1] > tmp) {
+                input.push(tmpStack[tmpStack.length - 1]);
+                tmpStack.pop();
+            }
+            tmpStack.push(tmp);
+        }
+        return tmpStack;
+    }
+
+    isEmpty() {
+        return this._stackElements.length === 0;
+    }
+
+    size() {
+        return this._stackElements.length;
+    }
 }
 
-exports.Stack = Stack;
+module.exports = { Stack };

@@ -2,72 +2,104 @@ const { expect } = require('chai');
 const { Stack } = require('../src/stack');
 
 describe('stack tests', () => {
-  const stack = new Stack();
+    const stack = new Stack();
+    const ngeRightStack = new Stack();
+    const histogram = new Stack();
+    const sorter = new Stack();
 
-  describe('.push(element)', () => {
-    it('should push elements to the top of the stack', () => {
-      stack.push(1);
-      stack.push(2);
-      stack.push('3th');
+    describe('.push(element)', () => {
+        it('push elements to the top ', () => {
+            stack.push(1);
+            stack.push(2);
+            stack.push(3);
+        });
     });
-  });
 
-  describe('.size()', () => {
-    it('should have length of 3', () => {
-      expect(stack.size()).to.equal(3);
+    describe('Stack Next Greater Element to the right', () => {
+        it('prints the next greater array', () => {
+            ngeRightStack.push(1);
+            ngeRightStack.push(2);
+            ngeRightStack.push(3);
+            ngeRightStack.push(4);
+            ngeRightStack.push(5);
+            expect(ngeRightStack.printNGE()).to.deep.equal({
+                1: 2,
+                2: 3,
+                3: 4,
+                4: 5,
+                5: -1
+            });
+        });
     });
-  });
 
-  describe('.isEmpty()', () => {
-    it('should not be empty', () => {
-      expect(stack.isEmpty()).to.equal(false);
+    describe('.toArray()', () => {
+        it('returns an array', () => {
+            expect(stack.toArray()).to.deep.equal([1, 2, 3]);
+        });
     });
-  });
 
-  describe('.peek()', () => {
-    it('should peek the top element', () => {
-      expect(stack.peek()).to.equal('3th');
+    describe('.size()', () => {
+        it('have length of 3', () => {
+            expect(stack.size()).to.equal(3);
+        });
     });
-  });
 
-  describe('.toArray()', () => {
-    it('returns an array copy', () => {
-      expect(stack.toArray()).to.deep.equal([1, 2, '3th']);
+    describe('.histogram()', () => {
+        it('compute the max rectangular area correctly', () => {
+            let hist = [6, 2, 5, 4, 5, 1, 6];
+            hist.forEach((current) => histogram.push(current));
+            expect(histogram.computeHistogram()).to.equal(12);
+        });
     });
-  });
 
-  describe('.clone()', () => {
-    it('clones the stack', () => {
-      const clone = stack.clone();
-      clone.pop();
-
-      expect(stack.peek()).to.equal('3th');
-      expect(clone.peek()).to.equal(2);
+    describe('.peek()', () => {
+        it('peek the top element', () => {
+            expect(stack.peek()).to.equal(3);
+        });
     });
-  });
 
-  describe('.pop()', () => {
-    it('should pop the elements', () => {
-      expect(stack.pop()).to.equal('3th');
-      expect(stack.pop()).to.equal(2);
+    describe('Stack.fromArray(list)', () => {
+        it('creates a stack from an existing array', () => {
+            const s = Stack.fromArray([1, 2, 3]);
+            expect(s.peek()).to.equal(3);
+            expect(s.size()).to.equal(3);
+        });
     });
-  });
 
-  describe('.clear()', () => {
-    it('should clear the stack', () => {
-      stack.clear();
-      expect(stack.pop()).to.equal(null);
-      expect(stack.peek()).to.equal(null);
-      expect(stack.size()).to.equal(0);
-      expect(stack.isEmpty()).to.equal(true);
-    });
-  });
+    describe('.sortStack()', () => {
+        it('sorts the stack', () => {
+            sorter.push(34);
+            sorter.push(3);
+            sorter.push(31);
+            sorter.push(98);
+            sorter.push(92);
+            sorter.push(23);
 
-  describe('Stack.fromArray(list)', () => {
-    it('creates a stack from an existing array', () => {
-      const s = Stack.fromArray([1, 2, 3]);
-      expect(s.peek()).to.equal(3);
-      expect(s.size()).to.equal(3);
+            expect(sorter.sortStack()).to.deep.equal([3, 23, 31, 34, 92, 98]);
+        });
     });
-  });
+
+    describe('.isEmpty()', () => {
+        it('not be empty', () => {
+            expect(stack.isEmpty()).to.equal(false);
+        });
+    });
+
+    describe('.slidingMaxOfKSubarrays()', () => {
+        it('reverses the stack using a shallow copy', () => {
+            let a = [9, 7, 2, 4, 6, 8, 2, 1, 5];
+            let k = 3;
+            a.forEach((curr) => sorter.push(curr));
+            expect(sorter.slidingMaxOfKSubarrays(k)).to.deep.equal([
+                9, 7, 6, 8, 8, 8, 5
+            ]);
+        });
+    });
+
+    describe('.pop()', () => {
+        it('pop the elements', () => {
+            expect(stack.pop()).to.equal(3);
+            expect(stack.pop()).to.equal(2);
+        });
+    });
 });
