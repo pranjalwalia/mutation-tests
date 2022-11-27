@@ -1,39 +1,47 @@
 const { expect } = require('chai');
 const { Queue } = require('../src/queue');
 
-describe('Queue unit tests', () => {
+describe('Queue tests', () => {
     let queue;
 
     describe('new Queue()', () => {
-        it('creates an empty queue', () => {
+        it('empty queue', () => {
             queue = new Queue();
+        });
+
+        it('should be empty', () => {
+            expect(queue.isEmpty()).to.equal(true);
         });
     });
 
-    describe('Queue.fromArray(list)', () => {
+    describe('.fromArray(list)', () => {
+        const q = Queue.fromArray([3, 2, 1]);
         it('creates a queue from an existing array', () => {
-            const q = Queue.fromArray([1, 2, 3]);
-            expect(q.front()).to.equal(1);
+            expect(q.front()).to.equal(3);
             expect(q.size()).to.equal(3);
         });
+        it('validate size to be 3', () => expect(q.size()).to.equal(3));
+        it('validate not empty', () => expect(q.isEmpty()).to.equal(false));
     });
 
     describe('.enqueue(element)', () => {
         it('should enqueue 3 elements to the stack', () => {
             queue.enqueue(1);
-            queue.enqueue(8);
-            queue.push(45);
+            queue.enqueue(2);
+            queue.push(3);
         });
+        it('should assert size to be 3', () =>
+            expect(queue.size()).to.equal(3));
     });
 
     describe('.reverse()', () => {
+        let rq = new Queue();
+        rq.enqueue(1);
+        rq.enqueue(2);
+        rq.enqueue(3);
+        rq.enqueue(4);
+        it('validate size to be 4', () => expect(rq.size()).to.equal(4));
         it('reverse the queue', () => {
-            let rq = new Queue();
-            rq.enqueue(1);
-            rq.enqueue(2);
-            rq.enqueue(3);
-            rq.enqueue(4);
-
             expect(rq.toArray()).to.deep.equal([1, 2, 3, 4]);
 
             rq.reverse();
@@ -43,13 +51,18 @@ describe('Queue unit tests', () => {
     });
 
     describe('.size()', () => {
-        it('should have size of 3', () => {
+        it('should not be empty', () =>
+            expect(queue.isEmpty()).to.equal(false));
+        it('size 3', () => {
             expect(queue.size()).to.equal(3);
         });
     });
 
     describe('.front()', () => {
-        it('should peek the front element', () => {
+        it('should not be empty', () =>
+            expect(queue.isEmpty()).to.equal(false));
+
+        it('should get the front', () => {
             expect(queue.front()).to.equal(1);
         });
     });
@@ -68,8 +81,11 @@ describe('Queue unit tests', () => {
     });
 
     describe('.back()', () => {
-        it('should peek the back element', () => {
-            expect(queue.back()).to.equal(45);
+        it('should not be empty', () =>
+            expect(queue.isEmpty()).to.equal(false));
+
+        it('back element', () => {
+            expect(queue.back()).to.equal(3);
         });
     });
 
@@ -122,21 +138,27 @@ describe('Queue unit tests', () => {
     });
 
     describe('.isEmpty()', () => {
-        it('should not be empty', () => {
+        it('should not have size as zero', () => {
+            expect(queue.size()).to.not.equal(0);
+        });
+        it('not empty', () => {
             expect(queue.isEmpty()).to.equal(false);
         });
     });
 
     describe('.clone()', () => {
-        it('clone a queue', () => {
+        it('clone', () => {
             queue.dequeue();
 
             const clone = queue.clone();
             clone.dequeue();
 
-            expect(clone.front()).to.equal(45);
+            expect(clone.front()).to.equal(3);
             expect(clone.size()).to.equal(1);
             expect(queue.front(8));
+
+            expect(queue.isEmpty()).to.equal(false);
+            expect(queue.size()).to.not.equal(0);
             expect(queue.size()).to.equal(2);
         });
     });
@@ -164,24 +186,30 @@ describe('Queue unit tests', () => {
     });
 
     describe('toArray()', () => {
-        it('should convert the queue into an array', () => {
-            expect(queue.toArray()).to.deep.equal([8, 45]);
+        it('should not be empty', () =>
+            expect(queue.isEmpty()).to.equal(false));
+        it('queue into an array', () => {
+            expect(queue.toArray()).to.deep.equal([2, 3]);
         });
     });
 
     describe('dequeue()', () => {
-        it('should dequeue all elements', () => {
-            expect(queue.dequeue()).to.be.equal(8);
-            expect(queue.pop()).to.be.equal(45);
+        it('should not be empty', () =>
+            expect(queue.isEmpty()).to.equal(false));
+        it('dequeue all elements', () => {
+            expect(queue.dequeue()).to.be.equal(2);
+            expect(queue.pop()).to.be.equal(3);
         });
     });
 
     describe('.clear()', () => {
-        it('should clear the queue', () => {
+        it('clear the queue', () => {
             queue.enqueue(1);
             queue.enqueue(2);
             queue.enqueue(3);
+
             queue.clear();
+
             expect(queue.dequeue()).to.be.equal(null);
             expect(queue.front()).to.be.equal(null);
             expect(queue.back()).to.be.equal(null);

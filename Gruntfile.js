@@ -4,7 +4,7 @@ module.exports = (grunt) => {
             src: ['src/*.js', 'test/*.test.js']
         },
         mochaTest: {
-            files: ['test/*.test.js']
+            files: ['test/stack.test.js']
         },
         mocha_istanbul: {
             coverage: {

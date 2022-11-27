@@ -13,6 +13,9 @@ describe('stack tests', () => {
             stack.push(2);
             stack.push(3);
         });
+        it('should have size 3', () => expect(stack.size()).to.equal(3));
+        it('should not be empty', () =>
+            expect(stack.isEmpty()).to.equal(false));
     });
 
     describe('Stack Next Greater Element to the right', () => {
@@ -33,12 +36,16 @@ describe('stack tests', () => {
     });
 
     describe('.toArray()', () => {
+        it('should be non empty array', () =>
+            expect(stack.toArray().length).to.equal(3));
         it('returns an array', () => {
             expect(stack.toArray()).to.deep.equal([1, 2, 3]);
         });
     });
 
     describe('.size()', () => {
+        it('should not be empty', () =>
+            expect(stack.isEmpty()).to.equal(false));
         it('have length of 3', () => {
             expect(stack.size()).to.equal(3);
         });
@@ -53,7 +60,9 @@ describe('stack tests', () => {
     });
 
     describe('.peek()', () => {
-        it('peek the top element', () => {
+        it('should not be empty', () =>
+            expect(stack.isEmpty()).to.equal(false));
+        it('top element', () => {
             expect(stack.peek()).to.equal(3);
         });
     });
