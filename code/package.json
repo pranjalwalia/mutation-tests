@@ -1,9 +1,6 @@
 {
-    "name": "@datastructures-js/linked-list",
-    "version": "5.2.4",
-    "description": "@Dhingra",
-    "main": "index.js",
-    "types": "index.d.ts",
+    "name": "data_structures_utilities",
+    "version": "0.0.1",
     "scripts": {
         "test": "grunt test",
         "coverage": "grunt coverage",
@@ -14,12 +11,7 @@
         "url": ""
     },
     "keywords": [],
-    "author": "Eyas Ranjous <eyas.ranjous@gmail.com>",
     "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/datastructures-js/linked-list/issues"
-    },
-    "homepage": "https://github.com/datastructures-js/linked-list#readme",
     "devDependencies": {
         "@stryker-mutator/core": "^6.3.0",
         "@stryker-mutator/mocha-runner": "^6.3.0",
